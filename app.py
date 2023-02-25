@@ -15,6 +15,7 @@ client = MongoClient("mongodb://Lordviril:Gorposi0717@100.26.132.234:27017/SeLeT
 db = client.get_database("SeLeTiene")
 users = db["UsersTest"]
 listTextSearch = db["ListTextSearchTest"]
+listRecipeLocation = db["ListRecipeLocation"]
 
 def solve(s):
    pat = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
@@ -60,26 +61,65 @@ def addTextSearch():
         return jsonify({"text": "el campo text debe ser un String"}), 400 
     if data["text"] == "" :
         return jsonify({"error": "el campo text no puede ir vacio"}), 400
-    if not isinstance(data["idUser"], str) :
-        return jsonify({"text": "el campo idUser debe ser un String"}), 400 
-    if data["idUser"] == "" :
-        return jsonify({"error": "el campo idUser no puede ir vacio"}), 400
-    textDb = listTextSearch.find_one({"text": data["text"], "idUser": data["idUser"]})
+    if not isinstance(data["email"], str) :
+        return jsonify({"text": "el campo email debe ser un String"}), 400 
+    if data["email"] == "" :
+        return jsonify({"error": "el campo email no puede ir vacio"}), 400
+    textDb = listTextSearch.find_one({"text": data["text"], "email": data["email"]})
     if not textDb :
-        listTextSearch.insert_one({"text": data["text"], "idUser": data["idUser"]})
-    return jsonify({"message": "Complete"}), 201
-
-@app.route("/yape/api/getTextSearch", methods=["POST"])
-def getListTextSearch():
-    data = request.get_json()   
-    listTextDb = listTextSearch.find_one({"text": data["text"], "idUser": data["idUser"]})
+        listTextSearch.insert_one({"text": data["text"], "email": data["email"]})
+    listTextDb = listTextSearch.find({"email": data["email"]})
     listText = []
     for text in listTextDb :
         listText.append(text["text"])
 
     return jsonify({"data": listText}), 200
 
+@app.route("/yape/api/getTextSearch", methods=["POST"])
+def getListTextSearch():
+    data = request.get_json()   
+    listTextDb = listTextSearch.find({"email": data["email"]})
+    listText = []
+    for text in listTextDb :
+        listText.append(text["text"])
+
+    return jsonify({"data": listText}), 200
+
+@app.route("/yape/api/addLocationRecipe", methods=["POST"])
+def addLocationRecipe():   
+    data = request.get_json()
+    if not isinstance(data["lat"], float) :
+        return jsonify({"text": "el campo lat debe ser un float"}), 400 
+    if not isinstance(data["lot"], float) :
+        return jsonify({"text": "el campo lot debe ser un float"}), 400 
+    if not isinstance(data["idRecipe"], int) :
+        return jsonify({"text": "el campo idRecipe debe ser un Int"}), 400 
+
+    textDb = listRecipeLocation.find_one({"idRecipe": data["idRecipe"]})
+    if textDb :
+        listTextDb = listRecipeLocation.find()
+        listText = []
+        for text in listTextDb :
+            listText.append({"idRecipe": text["idRecipe"], "lat": text["lat"], "lot": text["lot"]})
+        return jsonify({"data": listText}), 200
     
+    listRecipeLocation.insert_one({"idRecipe": data["idRecipe"], "lat": data["lat"], "lot": data["lot"]})
+    listTextDb = listRecipeLocation.find()
+    listText = []
+    for text in listTextDb :
+        listText.append({"idRecipe": text["idRecipe"], "lat": text["lat"], "lot": text["lot"]})
+
+    return jsonify({"data": listText}), 200
+
+
+@app.route("/yape/api/getLocationsRecipes", methods=["GET"])
+def getLocationsRecipes():
+    listTextDb = listRecipeLocation.find()
+    listText = []
+    for text in listTextDb :
+        listText.append({"idRecipe": text["idRecipe"], "lat": text["lat"], "lot": text["lot"]})
+
+    return jsonify({"data": listText}), 200
 
 class User(object):
     def __init__(self, id, name, email, photo_url):
