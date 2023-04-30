@@ -23,7 +23,7 @@ def solve(s):
       return True
    return False
 
-@app.route("/yape/api/registerOrAuth", methods=["POST"])
+@app.route("/spira/api/registerOrAuth", methods=["POST"])
 def create_user():   
     data = request.get_json()
     if not isinstance(data["email"], str) :
@@ -54,7 +54,7 @@ def create_user():
         return jsonify({"error": "No fue posible autenticarse con las credenciales actuales"}), 400
     return jsonify({"message": "Complete", "data": {"email": data["email"], "password": data["password"]}}), 201
 
-@app.route("/yape/api/addTextSearch", methods=["POST"])
+@app.route("/spira/api/addTextSearch", methods=["POST"])
 def addTextSearch():   
     data = request.get_json()
     if not isinstance(data["text"], str) :
@@ -75,7 +75,7 @@ def addTextSearch():
 
     return jsonify({"data": listText}), 200
 
-@app.route("/yape/api/getTextSearch", methods=["POST"])
+@app.route("/spira/api/getTextSearch", methods=["POST"])
 def getListTextSearch():
     data = request.get_json()   
     listTextDb = listTextSearch.find({"email": data["email"]})
@@ -85,7 +85,7 @@ def getListTextSearch():
 
     return jsonify({"data": listText}), 200
 
-@app.route("/yape/api/addLocationRecipe", methods=["POST"])
+@app.route("/spira/api/addLocationRecipe", methods=["POST"])
 def addLocationRecipe():   
     data = request.get_json()
     if not isinstance(data["lat"], float) :
@@ -112,7 +112,7 @@ def addLocationRecipe():
     return jsonify({"data": listText}), 200
 
 
-@app.route("/yape/api/getLocationsRecipes", methods=["GET"])
+@app.route("/spira/api/getLocationsRecipes", methods=["GET"])
 def getLocationsRecipes():
     listTextDb = listRecipeLocation.find()
     listText = []
