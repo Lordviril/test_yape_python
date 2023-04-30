@@ -11,8 +11,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super-secret'
 api = Api(app)
 
-client = MongoClient("mongodb://Lordviril:Gorposi0717@100.26.132.234:27017/SeLeTiene")
-db = client.get_database("SeLeTiene")
+client = MongoClient("mongodb://Armentor:L0rdv1r1l0717@44.215.48.103:27017/SeLeTieneQa")
+db = client.get_database("SeLeTieneQa")
 users = db["UsersTest"]
 listTextSearch = db["ListTextSearchTest"]
 listRecipeLocation = db["ListRecipeLocation"]
@@ -171,4 +171,4 @@ class UserResource(Resource):
 api.add_resource(UserResource, '/user')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
